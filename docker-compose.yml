@@ -68,7 +68,7 @@ services:
       [
         "/bin/sh",
         "-c",
-        "until (/usr/bin/mc alias set local http://minio:9000 minioadmin minioadmin); do sleep 1; done; /usr/bin/mc mb -p local/store2web || true",
+        "until (/usr/bin/mc alias set local http://minio:9000 minioadmin minioadmin); do sleep 1; done; /usr/bin/mc mb -p local/store2web || true; /usr/bin/mc anonymous set public local/store2web",
       ]
 
 volumes:
