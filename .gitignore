@@ -23,9 +23,7 @@ coverage/
 
 .DS_Store
 
-# SQLite / Drizzle
+# SQLite
 *.sqlite
 *.sqlite3
 *.db
-drizzle/
-**/drizzle/
