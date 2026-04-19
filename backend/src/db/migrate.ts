@@ -1,7 +1,7 @@
 import path from "path";
-import { migrate } from "drizzle-orm/better-sqlite3/migrator";
+import { migrate } from "drizzle-orm/node-postgres/migrator";
 
-import { db, sqlite } from "./index";
+import { db, pool } from "./index";
 
 const migrationsFolder = path.resolve(process.cwd(), "drizzle");
 
@@ -12,5 +12,5 @@ try {
   console.error("Migration failed:", error);
   process.exitCode = 1;
 } finally {
-  sqlite.close();
+  pool.end();
 }

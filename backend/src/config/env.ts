@@ -6,6 +6,8 @@ dotenv.config({
 });
 
 const PORT = Number.parseInt(process.env.PORT ?? "", 10) || 3000;
-const DB_PATH = process.env.DB_PATH || path.resolve(process.cwd(), "dev.db");
+const DATABASE_URL =
+  process.env.DATABASE_URL ||
+  "postgresql://postgres:postgres@localhost:5432/store2web";
 
-export { PORT, DB_PATH };
+export { PORT, DATABASE_URL };

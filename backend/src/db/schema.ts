@@ -1,13 +1,12 @@
-import { sql } from "drizzle-orm";
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { pgTable, serial, timestamp, varchar } from "drizzle-orm/pg-core";
 
-const users = sqliteTable("users", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
-  name: text("name").notNull(),
-  email: text("email").notNull().unique(),
-  createdAt: integer("created_at", { mode: "timestamp_ms" })
+const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
+  createdAt: timestamp("created_at", { withTimezone: false })
     .notNull()
-    .default(sql`(unixepoch() * 1000)`),
+    .defaultNow(),
 });
 
 export { users };

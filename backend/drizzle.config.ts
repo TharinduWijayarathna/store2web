@@ -1,14 +1,15 @@
-import path from "path";
 import { defineConfig } from "drizzle-kit";
 import "dotenv/config";
 
-const dbPath = process.env.DB_PATH ?? path.resolve(process.cwd(), "dev.db");
+const databaseUrl =
+  process.env.DATABASE_URL ||
+  "postgresql://postgres:postgres@localhost:5432/store2web";
 
 export default defineConfig({
   schema: "./src/db/schema.ts",
   out: "./drizzle",
-  dialect: "sqlite",
+  dialect: "postgresql",
   dbCredentials: {
-    url: dbPath,
+    connectionString: databaseUrl,
   },
 });
