@@ -1,4 +1,6 @@
-const requestLogger = (req, res, next) => {
+import { NextFunction, Request, Response } from "express";
+
+const requestLogger = (req: Request, res: Response, next: NextFunction) => {
   const startedAt = Date.now();
 
   res.on("finish", () => {
@@ -11,4 +13,4 @@ const requestLogger = (req, res, next) => {
   next();
 };
 
-module.exports = { requestLogger };
+export { requestLogger };

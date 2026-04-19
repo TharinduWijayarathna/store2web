@@ -1,4 +1,6 @@
-const getHealth = (req, res) => {
+import { Request, Response } from "express";
+
+const getHealth = (_req: Request, res: Response) => {
   res.status(200).json({
     status: "ok",
     uptime: process.uptime(),
@@ -6,4 +8,4 @@ const getHealth = (req, res) => {
   });
 };
 
-module.exports = { getHealth };
+export { getHealth };

@@ -1,7 +1,7 @@
-const path = require("path");
-const { migrate } = require("drizzle-orm/better-sqlite3/migrator");
+import path from "path";
+import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 
-const { db, sqlite } = require("./index");
+import { db, sqlite } from "./index";
 
 const migrationsFolder = path.resolve(process.cwd(), "drizzle");
 

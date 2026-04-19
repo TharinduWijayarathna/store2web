@@ -1,5 +1,5 @@
-const { sqliteTable, integer, text } = require("drizzle-orm/sqlite-core");
-const { sql } = require("drizzle-orm");
+import { sql } from "drizzle-orm";
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 const users = sqliteTable("users", {
   id: integer("id").primaryKey({ autoIncrement: true }),
@@ -10,4 +10,4 @@ const users = sqliteTable("users", {
     .default(sql`(unixepoch() * 1000)`),
 });
 
-module.exports = { users };
+export { users };
