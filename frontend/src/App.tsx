@@ -1,6 +1,57 @@
+import { useEffect, useState } from "react"
+import { apiConfig, getHealth, getTenantOverview } from "./api"
 import { Button } from "./components/ui/button"
 
 function App() {
+  const [apiStatus, setApiStatus] = useState<"checking" | "online" | "offline">(
+    "checking",
+  )
+  const [tenantLabel, setTenantLabel] = useState<string | null>(null)
+
+  useEffect(() => {
+    let isActive = true
+
+    getHealth()
+      .then(() => {
+        if (isActive) {
+          setApiStatus("online")
+        }
+      })
+      .catch(() => {
+        if (isActive) {
+          setApiStatus("offline")
+        }
+      })
+
+    return () => {
+      isActive = false
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!apiConfig.tenantSlug) {
+      return
+    }
+
+    let isActive = true
+
+    getTenantOverview()
+      .then((data) => {
+        if (isActive) {
+          setTenantLabel(data.tenant.name)
+        }
+      })
+      .catch(() => {
+        if (isActive) {
+          setTenantLabel(null)
+        }
+      })
+
+    return () => {
+      isActive = false
+    }
+  }, [])
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border">
@@ -17,6 +68,16 @@ function App() {
             </div>
           </div>
           <div className="flex items-center gap-3">
+            <div className="hidden flex-col items-end gap-1 text-[11px] text-muted-foreground sm:flex">
+              <span className="rounded-full border border-border px-2 py-1">
+                API: {apiStatus}
+              </span>
+              {tenantLabel ? (
+                <span className="rounded-full border border-border px-2 py-1">
+                  Tenant: {tenantLabel}
+                </span>
+              ) : null}
+            </div>
             <Button variant="outline" size="sm">
               Partner with us
             </Button>
