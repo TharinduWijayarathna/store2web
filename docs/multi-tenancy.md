@@ -12,6 +12,8 @@ A **tenant** is one business store on Store2Web. It owns:
 
 The **platform** itself is not a tenant; it is the registration and onboarding surface.
 
+**Superadmins** operate above tenants: they can list and manage all stores via platform routes without store membership. See [Superadmin](./superadmin.md).
+
 ## Isolation strategy (recommended)
 
 **Shared database, shared schema, row-level tenant scoping.**
@@ -22,11 +24,17 @@ Alternative (not chosen): database-per-tenant — higher ops cost, unnecessary a
 
 ## Identifying the tenant
 
-### Admin / platform API
+### Store admin API
 
 - Authenticated user session includes `userId`.
 - Store context from URL (`/api/stores/:storeId/...`) or header.
 - Service verifies user is a member of that store before any mutation.
+
+### Superadmin API
+
+- Same auth session; middleware checks `users.platform_role = superadmin`.
+- Routes under `/api/superadmin/*` — no tenant membership required.
+- Cross-tenant reads/writes only through these routes; mutating actions must write to `admin_audit_logs`.
 
 ### Public storefront
 
@@ -67,6 +75,8 @@ Each store links to a `subscription` record. Feature flags and limits derive fro
 ## Security checklist
 
 - [ ] Never accept `tenantId` from client without membership check
+- [ ] Superadmin access only via `platform_role`, never via store membership alone
 - [ ] Public endpoints only expose published, non-sensitive fields
+- [ ] Suspended stores must not serve public storefront content
 - [ ] Media URLs scoped per tenant bucket prefix or signed URLs
 - [ ] Rate limiting per IP on public storefront (later)

@@ -11,6 +11,7 @@ Store2Web is a multi-tenant platform that lets small and mid-scale businesses re
 | [Multi-tenancy](./multi-tenancy.md) | Tenant model, isolation, and routing |
 | [Data model](./data-model.md) | Entities, relationships, and schema direction |
 | [Platform site](./platform-site.md) | Store2Web public marketing and registration app |
+| [Superadmin](./superadmin.md) | Platform operator console — tenants, users, moderation |
 | [Storefront](./storefront.md) | Per-tenant customer-facing store sites |
 | [Subscriptions](./subscriptions.md) | Plans and billing (future — not yet decided) |
 | [Development](./development.md) | Local setup, conventions, and workflows |

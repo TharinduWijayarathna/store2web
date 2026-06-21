@@ -17,12 +17,17 @@ flowchart TB
     AF[Admin frontend]
   end
 
+  subgraph superadmin [Superadmin console]
+    SAF[Superadmin frontend]
+  end
+
   API[Backend API — Express]
   DB[(PostgreSQL)]
   S3[(MinIO / S3 — media)]
 
   PF --> API
   AF --> API
+  SAF --> API
   SF1 --> API
   SF2 --> API
   API --> DB
@@ -73,12 +78,13 @@ Rules:
 
 ## Frontend direction (planned)
 
-Three logical surfaces may share one Vite app initially or split later:
+Four logical surfaces may share one Vite app initially or split later:
 
 | Surface | URL pattern (example) | Purpose |
 |---------|-------------------------|---------|
 | **Platform** | `store2web.com` | Marketing, register, login |
 | **Admin** | `app.store2web.com` or `/admin` | Store management |
+| **Superadmin** | `admin.store2web.com` or `/superadmin` | Platform operator console — see [Superadmin](./superadmin.md) |
 | **Storefront** | `{slug}.store2web.com` | Public customer site |
 
 Routing and host-based tenant resolution are documented in [Multi-tenancy](./multi-tenancy.md).
@@ -89,6 +95,7 @@ Routing and host-based tenant resolution are documented in [Multi-tenancy](./mul
 - JSON request/response bodies
 - Health: `GET /api/health`
 - Future auth: session or JWT (TBD); all mutating store routes require authenticated owner + tenant membership
+- Superadmin routes: `/api/superadmin/*`, require `platform_role = superadmin` — separate from tenant checks
 - Public storefront reads: unauthenticated, tenant resolved from host or path slug
 
 ## Infrastructure (local)

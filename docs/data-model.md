@@ -14,8 +14,9 @@ Direction for PostgreSQL schema via Drizzle ORM. Table names are illustrative; a
 
 | Table | Key fields | Notes |
 |-------|------------|-------|
-| `users` | id, email, password_hash, name | Extend existing table |
+| `users` | id, email, password_hash, name, platform_role, disabled_at | `platform_role`: `user` \| `superadmin`; see [Superadmin](./superadmin.md) |
 | `sessions` or refresh tokens | user_id, expires_at | If session-based auth |
+| `admin_audit_logs` | id, actor_user_id, action, resource_type, resource_id, metadata, created_at | Superadmin action trail |
 
 ### Tenancy
 
@@ -71,6 +72,7 @@ erDiagram
   products ||--o{ product_images : has
   stores ||--o| subscriptions : has
   plans ||--o{ subscriptions : defines
+  users ||--o{ admin_audit_logs : performs
 ```
 
 ## Status enums (draft)

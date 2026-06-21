@@ -12,6 +12,7 @@ Each business is a **tenant**. Product catalogs, categories, branding, and detai
 |------|-------------|
 | **Platform visitor** | Browses Store2Web marketing pages; may register |
 | **Store owner / admin** | Registers, manages store settings, products, categories, and pages |
+| **Superadmin** | Store2Web operator; manages all tenants, users, and platform health — see [Superadmin](./superadmin.md) |
 | **Store customer** | Visits a tenant storefront; browses products and detail pages (checkout later) |
 
 ## Core user journeys
@@ -34,6 +35,13 @@ Each business is a **tenant**. Product catalogs, categories, branding, and detai
 1. Customer visits `{store-slug}.store2web.com` or a custom domain (future).
 2. Browses categories and products.
 3. Opens product detail and content pages.
+
+### 4. Operate the platform (superadmin)
+
+1. Superadmin logs in with a platform-level role (not tenant membership).
+2. Reviews dashboard metrics and recent signups.
+3. Manages stores (view, suspend, delete) and users (disable, role changes).
+4. Actions are recorded in an audit log.
 
 > Checkout, cart, and payments are out of scope for the initial build unless explicitly prioritized.
 
