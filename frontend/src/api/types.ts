@@ -1,23 +1,28 @@
-type Tenant = {
+type User = {
   id: number;
   name: string;
-  slug: string;
+  email: string;
+  platformRole: string;
 };
 
-type Space = {
+type StoreSummary = {
   id: number;
-  tenantId: number;
   name: string;
   slug: string;
+  description: string | null;
+  logoUrl: string | null;
+  status: string;
+  role: string;
   createdAt: string;
 };
 
-type BusinessProfile = {
+type Store = {
   id: number;
-  tenantId: number;
-  spaceId: number;
-  displayName: string;
+  name: string;
+  slug: string;
   description: string | null;
+  logoUrl: string | null;
+  status: string;
   contactEmail: string | null;
   phone: string | null;
   website: string | null;
@@ -28,98 +33,52 @@ type BusinessProfile = {
 
 type Product = {
   id: number;
-  tenantId: number;
-  spaceId: number;
+  storeId: number;
   name: string;
+  slug: string;
   description: string | null;
   priceCents: number;
   currency: string;
   status: string;
+  metadata: Record<string, unknown>;
   createdAt: string;
   updatedAt: string;
 };
 
-type Subscription = {
+type Category = {
   id: number;
-  tenantId: number;
-  plan: string;
-  status: string;
-  startedAt: string;
-  currentPeriodEnd: string | null;
+  storeId: number;
+  name: string;
+  slug: string;
+  parentId: number | null;
+  sortOrder: number;
+  createdAt: string;
+};
+
+type ContentPage = {
+  id: number;
+  storeId: number;
+  title: string;
+  slug: string;
+  body: string | null;
+  type: string;
+  published: string;
+  sortOrder: number;
+  createdAt: string;
   updatedAt: string;
 };
 
-type TenantOverview = {
-  tenant: Tenant;
-  spaces: Space[];
-  businessProfile: BusinessProfile | null;
-  subscription: Subscription | null;
-};
-
-type RegisterResponse = {
-  tenant: Tenant;
-  owner: {
-    id: number;
-    name: string;
-    email: string;
-    tenantId: number;
-  };
-  space: Space;
-  subscription: Subscription;
-  businessProfile: BusinessProfile;
-};
-
-type RegisterPayload = {
-  name: string;
-  email: string;
-  tenantName: string;
-  tenantSlug: string;
-  spaceName?: string;
-  plan?: string;
-  businessName?: string;
-};
-
-type CreateSpacePayload = {
-  name: string;
-  slug: string;
-};
-
-type CreateProductPayload = {
-  name: string;
-  priceCents: number;
-  currency?: string;
-  status?: string;
-  description?: string;
-  spaceId?: number;
-};
-
-type BusinessProfilePayload = {
-  displayName?: string;
-  description?: string;
-  contactEmail?: string;
-  phone?: string;
-  website?: string;
-  address?: string;
-  spaceId?: number;
-};
-
-type SubscriptionPayload = {
-  plan?: string;
-  status?: string;
-  currentPeriodEnd?: string;
+type MeResponse = {
+  user: User;
+  stores: StoreSummary[];
 };
 
 export type {
-  Tenant,
-  Space,
-  BusinessProfile,
+  User,
+  StoreSummary,
+  Store,
   Product,
-  Subscription,
-  TenantOverview,
-  RegisterResponse,
-  RegisterPayload,
-  CreateSpacePayload,
-  CreateProductPayload,
-  BusinessProfilePayload,
-  SubscriptionPayload,
+  Category,
+  ContentPage,
+  MeResponse,
 };

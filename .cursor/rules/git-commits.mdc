@@ -1,0 +1,39 @@
+---
+description: Commit as the repo GitHub user, never as Cursor Agent
+alwaysApply: true
+---
+
+# Git commits — author identity
+
+When the user asks you to commit (or create a commit as part of their request):
+
+## Author must be the GitHub user
+
+- Commits **must** appear as **Tharindu Wijayarathna** `<wikum.dev@gmail.com>` — the repo's configured GitHub identity.
+- **Never** commit as Cursor Agent, `cursor-agent`, `Cursor`, or any other automated/agent identity.
+- **Never** change `git config` (local or global) to set author name or email.
+
+## How to commit
+
+1. Rely on the repository's existing `user.name` and `user.email` (already set to the identity above).
+2. Do **not** pass `--author` unless a commit would otherwise use the wrong identity; if needed:
+
+   ```bash
+   git commit --author="Tharindu Wijayarathna <wikum.dev@gmail.com>" -m "$(cat <<'EOF'
+   Your message here.
+
+   EOF
+   )"
+   ```
+
+3. After committing, verify authorship:
+
+   ```bash
+   git log -1 --format='%an <%ae>'
+   ```
+
+   If the author is not `Tharindu Wijayarathna <wikum.dev@gmail.com>`, amend is **not** allowed unless the user explicitly requests it — fix the author on the next commit or ask the user how to proceed.
+
+## Committer line
+
+Git may record a separate committer (e.g. environment default). The **author** line must always be the GitHub user above. Do not add "Co-authored-by: Cursor" or similar trailers unless the user explicitly asks.

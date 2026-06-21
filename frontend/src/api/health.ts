@@ -7,7 +7,6 @@ type HealthResponse = {
   timestamp: string;
 };
 
-const getHealth = () =>
-  apiFetch<HealthResponse>(API_ROUTES.health, { skipTenant: true });
+const getHealth = () => apiFetch<HealthResponse>(API_ROUTES.health);
 
 export { getHealth };

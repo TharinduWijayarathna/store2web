@@ -40,3 +40,8 @@ alwaysApply: true
 | Plans (future) | `docs/subscriptions.md` |
 | Dev setup | `docs/development.md` |
 | Checklist | `docs/project-status.md` |
+| Doc vs code audit | `docs/implementation-audit.md` |
+
+## Testing (mandatory)
+
+Follow `.cursor/rules/testing.mdc`: every change includes tests; **100% coverage** required before work is complete.

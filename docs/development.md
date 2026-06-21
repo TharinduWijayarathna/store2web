@@ -68,6 +68,18 @@ Aligned with `.github/copilot-instructions.md`:
 
 GitHub Actions workflow at `.github/workflows/ci.yml` — run backend/frontend checks on push/PR.
 
+## Testing
+
+```bash
+# Backend (requires Postgres with `store2web` DB — use Docker Compose)
+docker compose run --rm backend sh -c "npm ci && npm run test:coverage"
+
+# Local (if DATABASE_URL points at running Postgres)
+cd backend && npm run test:coverage
+```
+
+Coverage rules: see `.cursor/rules/testing.mdc`. CI enforces backend minimums; target is 100% on all metrics.
+
 ## Adding a feature (checklist)
 
 1. Check [Project status](./project-status.md) for dependencies and mark item **In progress**.
