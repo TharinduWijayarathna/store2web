@@ -15,6 +15,7 @@ Store2Web is a multi-tenant platform that lets small and mid-scale businesses re
 | [Storefront](./storefront.md) | Per-tenant customer-facing store sites |
 | [Subscriptions](./subscriptions.md) | Plans and billing (future — not yet decided) |
 | [Development](./development.md) | Local setup, conventions, and workflows |
+| [Implementation audit](./implementation-audit.md) | Documented scope vs code reality |
 | [Project status](./project-status.md) | Living checklist of done, in progress, and planned work |
 
 ## How to use these docs

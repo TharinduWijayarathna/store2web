@@ -6,7 +6,16 @@ Direction for PostgreSQL schema via Drizzle ORM. Table names are illustrative; a
 
 | Table | Notes |
 |-------|-------|
-| `users` | `id`, `name`, `email`, `created_at` — placeholder only; no auth yet |
+| `users` | Platform users: `password_hash`, `platform_role`, `disabled_at` |
+| `stores` | Tenant root: slug, status, contact fields, soft delete |
+| `store_memberships` | user ↔ store roles |
+| `categories` | Per-store categories |
+| `products` | `price_cents`, `metadata` jsonb, slug |
+| `product_categories` | Many-to-many |
+| `pages` | Content/detail pages |
+| `admin_audit_logs` | Superadmin action trail |
+
+JWT cookies are used instead of a `sessions` table. `product_images`, `media_assets`, `plans`, and `subscriptions` are **not** implemented yet.
 
 ## Planned core entities
 

@@ -2,7 +2,7 @@
 
 Living checklist for Store2Web. Update this file whenever work starts, completes, or scope changes.
 
-**Last updated:** 2026-06-22 (superadmin docs added)
+**Last updated:** 2026-06-22
 
 ## Legend
 
@@ -13,6 +13,15 @@ Living checklist for Store2Web. Update this file whenever work starts, completes
 | Planned | Agreed scope, not started |
 | Waiting | Blocked on decision or dependency |
 | Deferred | Explicitly out of current phase |
+| Partial | Documented but only partly implemented |
+
+---
+
+## Documentation vs code
+
+See **[implementation-audit.md](./implementation-audit.md)** for the full cross-check.
+
+**Verdict:** Core MVP (auth, stores, catalog APIs, public read API, superadmin phase 1, basic UI) is largely in place. Full doc scope is **not** 100% implemented — subscriptions, media/S3 uploads, full superadmin, storefront detail pages, and several CRUD gaps remain by design or omission.
 
 ---
 
@@ -25,9 +34,11 @@ Living checklist for Store2Web. Update this file whenever work starts, completes
 | Backend health endpoint | Done | `GET /api/health` |
 | Drizzle ORM + Postgres connection | Done | |
 | MinIO bucket bootstrap | Done | `store2web` bucket via compose |
-| CI workflow | Done | `.github/workflows/ci.yml` |
-| Project documentation (`docs/`) | Done | Initial architecture & plans |
-| Cursor rule for docs + status tracking | Done | `.cursor/rules/project-docs.mdc` |
+| CI workflow | Done | Build, lint, backend tests + coverage |
+| Project documentation (`docs/`) | Done | |
+| Implementation audit doc | Done | [implementation-audit.md](./implementation-audit.md) |
+| Cursor rules (docs + testing) | Done | `.cursor/rules/project-docs.mdc`, `testing.mdc` |
+| Schema migration to stores model | Done | `0001_platform_stores_schema` |
 
 ---
 
@@ -35,11 +46,14 @@ Living checklist for Store2Web. Update this file whenever work starts, completes
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Password hashing & user registration API | Planned | Extend `users` table |
-| Login / logout / session or JWT | Planned | Mechanism TBD |
-| `GET /api/me` current user | Planned | |
-| Platform register UI | Planned | Replace Vite starter |
-| Platform login UI | Planned | |
+| Password hashing & user registration API | Done | `POST /api/auth/register` |
+| Login / logout / JWT cookie session | Done | httpOnly cookie `s2w_token` |
+| `GET /api/me` current user | Done | Includes user's stores |
+| Platform register UI | Done | `/register` |
+| Platform login UI | Done | `/login` |
+| Platform home / dashboard / create store UI | Done | `/`, `/dashboard`, `/stores/new` |
+| Pricing page | Planned | Deferred with subscriptions |
+| Zod input validation (auth) | Done | |
 
 ---
 
@@ -47,13 +61,12 @@ Living checklist for Store2Web. Update this file whenever work starts, completes
 
 | Item | Status | Notes |
 |------|--------|-------|
-| `stores` table + migrations | Planned | slug, name, status |
-| `store_memberships` table | Planned | user ↔ store roles |
-| Create store API | Planned | `POST /api/stores` |
-| List / update store API | Planned | Member-only |
-| Tenant scoping middleware/service helper | Planned | Enforce on all store routes |
-| Store creation UI (platform) | Planned | After auth |
-| Owner dashboard (list stores) | Planned | |
+| `stores` table + migrations | Done | slug, name, status, soft delete |
+| `store_memberships` table | Done | user ↔ store roles |
+| Create / list / get / update store API | Done | Member-only |
+| Tenant scoping (`requireStoreMember`) | Done | |
+| Store admin UI (products, publish) | Partial | `/stores/:storeId` — no categories/pages UI |
+| Subdomain / custom domain routing | Deferred | Path `/s/:slug` for dev |
 
 ---
 
@@ -62,43 +75,26 @@ Living checklist for Store2Web. Update this file whenever work starts, completes
 | Item | Status | Notes |
 |------|--------|-------|
 | Superadmin documentation | Done | [superadmin.md](./superadmin.md) |
-| `users.platform_role` + `disabled_at` fields | Planned | `user` \| `superadmin` |
-| `admin_audit_logs` table | Planned | All mutating superadmin actions |
-| Superadmin auth middleware | Planned | `/api/superadmin/*` guard |
-| Bootstrap first superadmin (seed/env) | Planned | No public self-promotion |
-| Superadmin stores list + detail API | Planned | Search, filter, paginate |
-| Suspend / unsuspend store | Planned | Hides public storefront |
-| Superadmin users list + detail API | Planned | |
-| Disable user account | Planned | Blocks platform login |
-| Promote/demote superadmin role | Planned | Superadmin-only |
-| Audit log API + UI | Planned | |
-| Superadmin dashboard metrics | Planned | Store/user counts |
-| Superadmin console UI | Planned | Distinct from store admin |
-| Store delete (soft) | Planned | |
-| Impersonation | Deferred | High audit bar |
-| Superadmin 2FA | Deferred | Before production |
+| Platform role + audit log schema | Done | |
+| Bootstrap via `SUPERADMIN_EMAIL` | Done | |
+| Dashboard + stores list + suspend + soft delete API | Done | |
+| Superadmin UI | Partial | `/superadmin` — no store detail/users/audit |
+| Users API, audit log API, promote UI | Planned | See [superadmin.md](./superadmin.md) |
+| Impersonation, 2FA | Deferred | |
 
 ---
 
-## Catalog
+## Catalog & content
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Categories CRUD | Planned | Tree optional |
-| Products CRUD | Planned | jsonb metadata for flexible attrs |
-| Product ↔ category linking | Planned | |
-| Product images (S3 upload) | Planned | Presigned URLs |
-| Admin catalog UI | Planned | |
-
----
-
-## Content pages
-
-| Item | Status | Notes |
-|------|--------|-------|
-| Pages table + CRUD API | Planned | About, Contact, custom |
-| Admin page editor UI | Planned | Markdown or rich text TBD |
-| Publish / draft workflow | Planned | |
+| Products API (list/create/update) | Partial | No delete |
+| Categories API (list/create) | Partial | No update/delete |
+| Pages API (list/create/update) | Partial | No delete |
+| Product ↔ category linking | Done | API |
+| Product images / S3 upload | Planned | |
+| `media_assets` / `product_images` tables | Planned | Not in schema |
+| Admin catalog/pages UI | Partial | Products only in store admin |
 
 ---
 
@@ -106,60 +102,41 @@ Living checklist for Store2Web. Update this file whenever work starts, completes
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Public store API (read-only) | Planned | Published content only |
-| Store home page UI | Planned | Path-based slug first |
-| Product listing & detail UI | Planned | |
-| Content/detail page rendering | Planned | |
-| Subdomain tenant routing | Deferred | Use `/s/:slug` in dev first |
-| Custom domains | Deferred | |
+| Public read API (store, products, categories, pages) | Done | Published only; not paginated |
+| Store home UI `/s/:slug` | Done | Product grid |
+| Product detail UI | Planned | API exists |
+| Content page UI | Planned | API exists |
+| Per-store theming UI | Planned | |
 
 ---
 
-## Subscriptions & billing
+## Subscriptions & commerce
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Plan definitions | Waiting | Business decision pending — see [subscriptions.md](./subscriptions.md) |
-| Stripe integration | Deferred | After plans decided |
-| Feature/limit enforcement | Deferred | |
-| Platform pricing page | Deferred | Placeholder only until plans exist |
+| Plans / Stripe / checkout | Waiting or Deferred | Per [subscriptions.md](./subscriptions.md) |
 
 ---
 
-## Commerce (cart & checkout)
+## Testing & quality
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Shopping cart | Deferred | Not in initial scope |
-| Checkout & payments | Deferred | Not in initial scope |
-| Orders & fulfillment | Deferred | |
+| Backend test suite (Vitest + Supertest) | Done | 49 tests |
+| Backend coverage CI gates | Done | Target 100%; CI mins: lines 99%, branches 88%, funcs 100%, stmts 97% |
+| Frontend tests | Planned | Rule in place; not started |
+| API validation (Zod) | Partial | Auth, stores, products, pages, superadmin |
+| Structured API errors | Done | `AppError` + Zod |
 
 ---
 
-## Infrastructure & quality
+## Suggested next steps
 
-| Item | Status | Notes |
-|------|--------|-------|
-| API input validation (Zod) | Planned | |
-| Structured API error types | Planned | Error handler exists |
-| Backend tests | Planned | None yet |
-| Frontend tests | Planned | None yet |
-| Rate limiting (public API) | Deferred | |
-| Postgres RLS (optional) | Deferred | App-layer first |
-
----
-
-## Suggested implementation order
-
-1. Auth (register, login, me)
-2. Stores + memberships + tenant guard
-3. Products, categories, media upload
-4. Content pages
-5. Public storefront read APIs + UI
-6. Superadmin phase 1 (role, middleware, stores list, suspend)
-7. Superadmin phase 2 (users, audit log, dashboard UI)
-8. Subscriptions (after business decisions)
-9. Cart/checkout (if prioritized)
+1. Close doc/implementation gaps (product detail UI, categories/pages admin, superadmin users)
+2. Raise branch coverage toward 100%
+3. Add frontend tests per `.cursor/rules/testing.mdc`
+4. S3 image uploads
+5. Subscriptions (after business decisions)
 
 ---
 
@@ -168,8 +145,7 @@ Living checklist for Store2Web. Update this file whenever work starts, completes
 | Date | Decision | Rationale |
 |------|----------|-----------|
 | 2026-06-22 | Shared DB, row-level tenant isolation | Simple ops for SMB scale |
-| 2026-06-22 | Subscriptions deferred | Plans not finalized |
-| 2026-06-22 | Flexible product `metadata` jsonb | Catalogs vary per business |
-| 2026-06-22 | Path-based storefront routing for dev | Subdomains later |
-| 2026-06-22 | Superadmin as platform_role on users | Separate from store_memberships; cross-tenant via `/api/superadmin` |
-| 2026-06-22 | Superadmin phased after core tenant flows | Auth + stores first; platform ops in phase 6–7 |
+| 2026-06-22 | JWT in httpOnly cookie | Works with credentialed fetch |
+| 2026-06-22 | Stores/memberships model | Align code with docs |
+| 2026-06-22 | Mandatory tests + coverage rule | `.cursor/rules/testing.mdc` |
+| 2026-06-22 | `schema.ts` excluded from coverage | Drizzle declarative DSL |

@@ -1,122 +1,67 @@
-import { eq } from "drizzle-orm";
 import { Request, Response } from "express";
+import { z } from "zod";
 
-import { db } from "../db";
-import {
-  businessProfiles,
-  spaces,
-  subscriptions,
-  tenants,
-  users,
-} from "../db/schema";
+import { COOKIE_NAME } from "../config/env";
+import { loginUser, registerUser } from "../services/auth.service";
+import { listStoresForUser } from "../services/store.service";
+import { signToken } from "../utils/jwt";
 
-const addDays = (days: number) =>
-  new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+const registerSchema = z.object({
+  name: z.string().trim().min(1).max(255),
+  email: z.string().trim().email().max(255),
+  password: z.string().min(8).max(128),
+});
 
-const registerTenant = async (req: Request, res: Response) => {
-  const body = req.body as {
-    name?: string;
-    email?: string;
-    tenantName?: string;
-    tenantSlug?: string;
-    spaceName?: string;
-    plan?: string;
-    businessName?: string;
-  };
+const loginSchema = z.object({
+  email: z.string().trim().email(),
+  password: z.string().min(1),
+});
 
-  const name = typeof body.name === "string" ? body.name.trim() : "";
-  const email = typeof body.email === "string" ? body.email.trim() : "";
-  const tenantName =
-    typeof body.tenantName === "string" ? body.tenantName.trim() : "";
-  const tenantSlug =
-    typeof body.tenantSlug === "string" ? body.tenantSlug.trim() : "";
-  const spaceName =
-    typeof body.spaceName === "string" ? body.spaceName.trim() : "";
-  const plan = typeof body.plan === "string" ? body.plan.trim() : "";
-  const businessName =
-    typeof body.businessName === "string" ? body.businessName.trim() : "";
-
-  if (!name || !email || !tenantName || !tenantSlug) {
-    res.status(400).json({
-      error:
-        "name, email, tenantName, and tenantSlug are required to register.",
-    });
-    return;
-  }
-
-  const [existingTenant] = await db
-    .select()
-    .from(tenants)
-    .where(eq(tenants.slug, tenantSlug))
-    .limit(1);
-
-  if (existingTenant) {
-    res.status(409).json({ error: "Tenant slug already exists." });
-    return;
-  }
-
-  const [existingUser] = await db
-    .select()
-    .from(users)
-    .where(eq(users.email, email))
-    .limit(1);
-
-  if (existingUser) {
-    res.status(409).json({ error: "Email already registered." });
-    return;
-  }
-
-  const [tenant] = await db
-    .insert(tenants)
-    .values({ name: tenantName, slug: tenantSlug })
-    .returning();
-
-  const [owner] = await db
-    .insert(users)
-    .values({
-      name,
-      email,
-      tenantId: tenant.id,
-      role: "owner",
-    })
-    .returning();
-
-  const [space] = await db
-    .insert(spaces)
-    .values({
-      tenantId: tenant.id,
-      name: spaceName || `${tenantName} Space`,
-      slug: tenantSlug,
-    })
-    .returning();
-
-  const [subscription] = await db
-    .insert(subscriptions)
-    .values({
-      tenantId: tenant.id,
-      plan: plan || "starter",
-      status: "active",
-      currentPeriodEnd: addDays(30),
-    })
-    .returning();
-
-  const [businessProfile] = await db
-    .insert(businessProfiles)
-    .values({
-      tenantId: tenant.id,
-      spaceId: space.id,
-      displayName: businessName || tenantName,
-      contactEmail: email,
-    })
-    .returning();
-
-  res.status(201).json({
-    tenant,
-    owner,
-    space,
-    subscription,
-    businessProfile,
-  });
+const cookieOptions = {
+  httpOnly: true,
+  sameSite: "lax" as const,
+  secure: process.env.NODE_ENV === "production",
+  maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
-export { registerTenant };
+const register = async (req: Request, res: Response) => {
+  const body = registerSchema.parse(req.body);
+  const user = await registerUser(body);
+
+  const token = signToken({
+    userId: user.id,
+    email: user.email,
+    platformRole: user.platformRole,
+  });
+
+  res.cookie(COOKIE_NAME, token, cookieOptions);
+  res.status(201).json({ user });
+};
+
+const login = async (req: Request, res: Response) => {
+  const body = loginSchema.parse(req.body);
+  const user = await loginUser(body);
+
+  const token = signToken({
+    userId: user.id,
+    email: user.email,
+    platformRole: user.platformRole,
+  });
+
+  res.cookie(COOKIE_NAME, token, cookieOptions);
+  res.status(200).json({ user });
+};
+
+const logout = async (_req: Request, res: Response) => {
+  res.clearCookie(COOKIE_NAME);
+  res.status(200).json({ ok: true });
+};
+
+const me = async (req: Request, res: Response) => {
+  const user = req.user!;
+  const stores = await listStoresForUser(user.id);
+
+  res.status(200).json({ user, stores });
+};
+
+export { register, login, logout, me };
