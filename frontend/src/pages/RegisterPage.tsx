@@ -1,7 +1,7 @@
 import { type FormEvent, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 
-import { PlatformHeader } from "@/components/PlatformHeader";
+import { AuthLayout } from "@/components/AuthLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -35,54 +35,65 @@ function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <PlatformHeader />
-      <main className="mx-auto max-w-md px-6 py-16">
-        <h1 className="text-2xl font-semibold">Create your account</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
+    <AuthLayout
+      title="Create your account"
+      description="Start building your online store in just a few steps."
+      footer={
+        <p className="text-sm text-muted-foreground">
           Already have an account?{" "}
-          <Link to="/login" className="text-foreground underline">
-            Log in
+          <Link to="/login" className="font-medium text-primary hover:underline">
+            Sign in
           </Link>
         </p>
-        <form onSubmit={onSubmit} className="mt-8 space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Name</Label>
-            <Input
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
+      }
+    >
+      <form onSubmit={onSubmit} className="space-y-5">
+        <div className="space-y-2">
+          <Label htmlFor="name">Full name</Label>
+          <Input
+            id="name"
+            autoComplete="name"
+            placeholder="Jane Merchant"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="email">Email address</Label>
+          <Input
+            id="email"
+            type="email"
+            autoComplete="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            type="password"
+            autoComplete="new-password"
+            minLength={8}
+            placeholder="At least 8 characters"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        {error ? (
+          <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+            {error}
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              minLength={8}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          {error ? <p className="text-sm text-red-600">{error}</p> : null}
-          <Button type="submit" disabled={submitting} className="w-full">
-            {submitting ? "Creating account..." : "Register"}
-          </Button>
-        </form>
-      </main>
-    </div>
+        ) : null}
+        <Button type="submit" disabled={submitting} className="w-full" size="lg">
+          {submitting ? "Creating account..." : "Create account"}
+        </Button>
+      </form>
+    </AuthLayout>
   );
 }
 

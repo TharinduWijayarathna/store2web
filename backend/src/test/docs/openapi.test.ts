@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { openApiSpec } from "./openapi";
+import { openApiSpec } from "../../docs/openapi";
 
 describe("openApiSpec", () => {
   it("exports a valid openapi document", () => {

@@ -35,7 +35,7 @@ npm run test:coverage
 
 ## Conventions
 
-- Test files: `*.test.ts` / `*.test.tsx` next to source or under `src/test/`.
+- Test files live under `backend/src/test/` (mirrors source layout: `utils/`, `middleware/`, `services/`, etc.). Do **not** colocate `*.test.ts` next to source files.
 - Name tests after behavior: `register rejects duplicate email`.
 - Cover **happy path, validation errors, auth failures, and not-found** for each endpoint.
 - Update [project-status.md](../docs/project-status.md) test rows when adding suites.

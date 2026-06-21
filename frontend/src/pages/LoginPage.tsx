@@ -1,7 +1,7 @@
 import { type FormEvent, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 
-import { PlatformHeader } from "@/components/PlatformHeader";
+import { AuthLayout } from "@/components/AuthLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -34,44 +34,53 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <PlatformHeader />
-      <main className="mx-auto max-w-md px-6 py-16">
-        <h1 className="text-2xl font-semibold">Log in</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
+    <AuthLayout
+      title="Welcome back"
+      description="Sign in to manage your stores and storefronts."
+      footer={
+        <p className="text-sm text-muted-foreground">
           New here?{" "}
-          <Link to="/register" className="text-foreground underline">
+          <Link to="/register" className="font-medium text-primary hover:underline">
             Create an account
           </Link>
         </p>
-        <form onSubmit={onSubmit} className="mt-8 space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+      }
+    >
+      <form onSubmit={onSubmit} className="space-y-5">
+        <div className="space-y-2">
+          <Label htmlFor="email">Email address</Label>
+          <Input
+            id="email"
+            type="email"
+            autoComplete="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            type="password"
+            autoComplete="current-password"
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        {error ? (
+          <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+            {error}
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          {error ? <p className="text-sm text-red-600">{error}</p> : null}
-          <Button type="submit" disabled={submitting} className="w-full">
-            {submitting ? "Logging in..." : "Log in"}
-          </Button>
-        </form>
-      </main>
-    </div>
+        ) : null}
+        <Button type="submit" disabled={submitting} className="w-full" size="lg">
+          {submitting ? "Signing in..." : "Sign in"}
+        </Button>
+      </form>
+    </AuthLayout>
   );
 }
 

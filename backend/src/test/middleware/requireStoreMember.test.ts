@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
 import { describe, expect, it, vi } from "vitest";
 
-import { requireStoreMember } from "./requireStoreMember";
-import { AppError } from "../utils/errors";
+import { requireStoreMember } from "../../middleware/requireStoreMember";
+import { AppError } from "../../utils/errors";
 
 describe("requireStoreMember", () => {
   it("rejects missing auth and invalid store ids", async () => {

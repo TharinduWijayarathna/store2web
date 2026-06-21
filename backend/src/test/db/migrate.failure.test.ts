@@ -4,7 +4,7 @@ vi.mock("drizzle-orm/node-postgres/migrator", () => ({
   migrate: vi.fn().mockRejectedValueOnce(new Error("migrate failed")),
 }));
 
-vi.mock("./index", () => ({
+vi.mock("../../db/index", () => ({
   db: {},
   pool: { end: vi.fn().mockResolvedValue(undefined) },
 }));
@@ -12,7 +12,7 @@ vi.mock("./index", () => ({
 describe("migrate failure", () => {
   it("sets exit code when migration fails", async () => {
     vi.resetModules();
-    await import("./migrate");
+    await import("../../db/migrate");
     await new Promise((resolve) => setTimeout(resolve, 10));
     expect(process.exitCode).toBe(1);
     process.exitCode = 0;

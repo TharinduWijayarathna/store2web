@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
 import { describe, expect, it, vi } from "vitest";
 
-import { requireSuperadmin } from "./requireSuperadmin";
-import { AppError } from "../utils/errors";
+import { requireSuperadmin } from "../../middleware/requireSuperadmin";
+import { AppError } from "../../utils/errors";
 
 describe("requireSuperadmin", () => {
   it("passes for superadmin users", () => {

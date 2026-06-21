@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import * as schema from "./schema";
+import * as schema from "../../db/schema";
 
 describe("schema", () => {
   it("exports all table definitions", () => {

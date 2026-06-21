@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type { NextFunction, Request, Response } from "express";
 
-import { asyncHandler } from "./asyncHandler";
+import { asyncHandler } from "../../utils/asyncHandler";
 
 describe("asyncHandler", () => {
   it("forwards rejected promises to next", async () => {

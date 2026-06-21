@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { createCategory } from "./category.service";
-import { createProduct, updateProduct } from "./product.service";
-import { createStore, updateStore } from "./store.service";
-import { createPage } from "./page.service";
-import { AppError } from "../utils/errors";
-import { resetDatabase } from "../test/setup";
+import { createCategory } from "../../services/category.service";
+import { createProduct, updateProduct } from "../../services/product.service";
+import { createStore, updateStore } from "../../services/store.service";
+import { createPage } from "../../services/page.service";
+import { AppError } from "../../utils/errors";
+import { resetDatabase } from "../setup";
 
 describe("service validation", () => {
   beforeEach(async () => {

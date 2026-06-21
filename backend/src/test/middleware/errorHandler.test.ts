@@ -2,8 +2,8 @@ import type { NextFunction, Request, Response } from "express";
 import { describe, expect, it, vi } from "vitest";
 import { ZodError } from "zod";
 
-import { errorHandler } from "./errorHandler";
-import { AppError } from "../utils/errors";
+import { errorHandler } from "../../middleware/errorHandler";
+import { AppError } from "../../utils/errors";
 
 describe("errorHandler", () => {
   const createResponse = () => {

@@ -6,7 +6,7 @@ import { app } from "../app";
 import { db } from "../db";
 import { users } from "../db/schema";
 import { bootstrapSuperadmin } from "../db/seed";
-import { resetDatabase } from "../test/setup";
+import { resetDatabase } from "./setup";
 
 const registerUser = (agent: request.SuperAgentTest, suffix: string) =>
   agent.post("/api/auth/register").send({

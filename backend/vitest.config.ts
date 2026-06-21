@@ -9,13 +9,13 @@ export default defineConfig({
   test: {
     globals: false,
     environment: "node",
-    include: ["src/**/*.test.ts"],
+    include: ["src/test/**/*.test.ts"],
     globalSetup: ["./src/test/globalSetup.ts"],
     fileParallelism: false,
     coverage: {
       provider: "v8",
       include: ["src/**/*.ts"],
-      exclude: ["src/**/*.test.ts", "src/test/**", "src/types/**", "src/db/schema.ts"],
+      exclude: ["src/test/**", "src/types/**", "src/db/schema.ts"],
       thresholds: {
         lines: 99,
         branches: 88,

@@ -1,8 +1,8 @@
 import request from "supertest";
 import { describe, expect, it } from "vitest";
 
-import { app } from "../app";
-import { signToken } from "../utils/jwt";
+import { app } from "../../app";
+import { signToken } from "../../utils/jwt";
 
 describe("auth middleware edge cases", () => {
   it("rejects tokens for missing users", async () => {

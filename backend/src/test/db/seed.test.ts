@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { bootstrapSuperadmin } from "./seed";
+import { bootstrapSuperadmin } from "../../db/seed";
 
 describe("bootstrapSuperadmin", () => {
   it("runs without error when SUPERADMIN_EMAIL is unset", async () => {

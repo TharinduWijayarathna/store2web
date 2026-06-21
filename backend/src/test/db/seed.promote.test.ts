@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { bootstrapSuperadmin } from "./seed";
+import { bootstrapSuperadmin } from "../../db/seed";
 
 describe("bootstrapSuperadmin with email", () => {
   it("promotes the configured email when set", async () => {

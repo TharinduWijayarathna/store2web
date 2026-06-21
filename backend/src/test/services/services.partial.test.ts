@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it } from "vitest";
 
-import { registerUser } from "./auth.service";
-import { updatePage } from "./page.service";
-import { updateStore } from "./store.service";
-import { resetDatabase } from "../test/setup";
+import { registerUser } from "../../services/auth.service";
+import { updatePage } from "../../services/page.service";
+import { updateStore } from "../../services/store.service";
+import { resetDatabase } from "../setup";
 
 describe("partial service updates", () => {
   beforeEach(async () => {
@@ -16,13 +16,13 @@ describe("partial service updates", () => {
       email: "partial@test.com",
       password: "password123",
     });
-    const store = await import("./store.service").then((m) =>
+    const store = await import("../../services/store.service").then((m) =>
       m.createStore(user.id, { name: "Partial Store", slug: "partial-store" }),
     );
 
     await updateStore(store.id, { description: "Updated only" });
 
-    const page = await import("./page.service").then((m) =>
+    const page = await import("../../services/page.service").then((m) =>
       m.createPage(store.id, { title: "About", published: false }),
     );
 

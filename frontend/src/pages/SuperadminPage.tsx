@@ -1,13 +1,22 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import {
+  Buildings,
+  ShieldCheck,
+  Storefront,
+  UsersThree,
+} from "@phosphor-icons/react";
 
 import {
   getSuperadminDashboard,
   listAllStores,
   updateStoreStatus,
 } from "@/api";
+import { LoadingState } from "@/components/LoadingState";
+import { PageHeader } from "@/components/PageHeader";
 import { PlatformHeader } from "@/components/PlatformHeader";
-import { Badge } from "@/components/ui/badge";
+import { PlatformLayout } from "@/components/PlatformLayout";
+import { StatusBadge } from "@/components/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/context/AuthContext";
@@ -27,14 +36,20 @@ function SuperadminPage() {
       createdAt: string;
     }>
   >([]);
+  const [dataLoading, setDataLoading] = useState(true);
 
   const load = async () => {
-    const [dashboard, storeList] = await Promise.all([
-      getSuperadminDashboard(),
-      listAllStores(),
-    ]);
-    setStats(dashboard);
-    setStores(storeList.stores);
+    setDataLoading(true);
+    try {
+      const [dashboard, storeList] = await Promise.all([
+        getSuperadminDashboard(),
+        listAllStores(),
+      ]);
+      setStats(dashboard);
+      setStores(storeList.stores);
+    } finally {
+      setDataLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -44,7 +59,11 @@ function SuperadminPage() {
   }, [user]);
 
   if (loading) {
-    return <p className="p-8 text-sm text-muted-foreground">Loading...</p>;
+    return (
+      <PlatformLayout className="bg-slate-950 text-white">
+        <LoadingState fullScreen label="Loading admin console..." />
+      </PlatformLayout>
+    );
   }
 
   if (!user) {
@@ -61,67 +80,101 @@ function SuperadminPage() {
     await load();
   };
 
-  return (
-    <div className="min-h-screen bg-slate-950 text-slate-50">
-      <div className="border-b border-slate-800 bg-slate-900">
-        <PlatformHeader />
-      </div>
-      <main className="mx-auto max-w-6xl px-6 py-10">
-        <h1 className="text-2xl font-semibold">Platform superadmin</h1>
-        {stats ? (
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
-            <Card className="border-slate-800 bg-slate-900 text-slate-50">
-              <CardHeader>
-                <CardTitle className="text-sm">Total stores</CardTitle>
-              </CardHeader>
-              <CardContent className="text-2xl font-semibold">
-                {stats.stores.total}
-              </CardContent>
-            </Card>
-            <Card className="border-slate-800 bg-slate-900 text-slate-50">
-              <CardHeader>
-                <CardTitle className="text-sm">Published</CardTitle>
-              </CardHeader>
-              <CardContent className="text-2xl font-semibold">
-                {stats.stores.published}
-              </CardContent>
-            </Card>
-            <Card className="border-slate-800 bg-slate-900 text-slate-50">
-              <CardHeader>
-                <CardTitle className="text-sm">Users</CardTitle>
-              </CardHeader>
-              <CardContent className="text-2xl font-semibold">
-                {stats.users.total}
-              </CardContent>
-            </Card>
-          </div>
-        ) : null}
+  const statCards = stats
+    ? [
+        {
+          label: "Total stores",
+          value: stats.stores.total,
+          icon: Storefront,
+        },
+        {
+          label: "Published",
+          value: stats.stores.published,
+          icon: ShieldCheck,
+        },
+        {
+          label: "Platform users",
+          value: stats.users.total,
+          icon: UsersThree,
+        },
+      ]
+    : [];
 
-        <div className="mt-10 space-y-3">
-          {stores.map((store) => (
-            <div
-              key={store.id}
-              className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-800 bg-slate-900 px-4 py-3"
-            >
-              <div>
-                <p className="font-medium">{store.name}</p>
-                <p className="text-xs text-slate-400">/{store.slug}</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <Badge variant="outline">{store.status}</Badge>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => void toggleSuspend(store.id, store.status)}
+  return (
+    <PlatformLayout className="bg-slate-950 text-white">
+      <PlatformHeader tone="dark" />
+      <main className="mx-auto max-w-6xl px-6 py-10">
+        <PageHeader
+          title="Platform administration"
+          description="Monitor stores across the platform and manage moderation actions."
+          className="border-white/10 pb-8 text-white [&_p]:text-slate-400"
+        />
+
+        {dataLoading ? (
+          <LoadingState fullScreen label="Loading platform data..." />
+        ) : (
+          <>
+            <div className="grid gap-4 md:grid-cols-3">
+              {statCards.map((item) => (
+                <Card
+                  key={item.label}
+                  className="border-white/10 bg-white/5 text-white shadow-none ring-0"
                 >
-                  {store.status === "suspended" ? "Unsuspend" : "Suspend"}
-                </Button>
-              </div>
+                  <CardHeader className="pb-2">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-sm font-medium text-slate-300">
+                        {item.label}
+                      </CardTitle>
+                      <item.icon className="size-5 text-indigo-300" />
+                    </div>
+                  </CardHeader>
+                  <CardContent className="text-3xl font-bold">
+                    {item.value}
+                  </CardContent>
+                </Card>
+              ))}
             </div>
-          ))}
-        </div>
+
+            <div className="mt-10 space-y-3">
+              <h2 className="font-heading text-lg font-semibold">All stores</h2>
+              {stores.length === 0 ? (
+                <div className="rounded-xl border border-dashed border-white/10 px-6 py-10 text-center text-slate-400">
+                  No stores on the platform yet.
+                </div>
+              ) : (
+                stores.map((store) => (
+                  <div
+                    key={store.id}
+                    className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-white/10 bg-white/5 px-5 py-4"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="flex size-10 items-center justify-center rounded-lg bg-indigo-500/15 text-indigo-300">
+                        <Buildings className="size-5" />
+                      </div>
+                      <div>
+                        <p className="font-medium">{store.name}</p>
+                        <p className="text-sm text-slate-400">/s/{store.slug}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <StatusBadge status={store.status} />
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-white/15 bg-transparent text-white hover:bg-white/10 hover:text-white"
+                        onClick={() => void toggleSuspend(store.id, store.status)}
+                      >
+                        {store.status === "suspended" ? "Unsuspend" : "Suspend"}
+                      </Button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </>
+        )}
       </main>
-    </div>
+    </PlatformLayout>
   );
 }
 

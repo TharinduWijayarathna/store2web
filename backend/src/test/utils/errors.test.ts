@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { AppError } from "./errors";
+import { AppError } from "../../utils/errors";
 
 describe("AppError", () => {
   it("sets message and default status code", () => {
