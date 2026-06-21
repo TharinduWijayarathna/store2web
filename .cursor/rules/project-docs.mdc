@@ -1,0 +1,41 @@
+---
+description: Read docs/ before work and keep project-status.md in sync
+alwaysApply: true
+---
+
+# Store2Web documentation & status
+
+## Before starting any task
+
+1. Read relevant files under `docs/` (at minimum `docs/README.md` and `docs/project-status.md`).
+2. Use `docs/project-status.md` as the source of truth for what is done, in progress, planned, waiting, or deferred.
+3. Do not contradict documented architecture without updating the docs in the same change.
+
+## During implementation
+
+- If you discover new scope, blockers, or design changes, update the appropriate doc in `docs/` (e.g. `architecture.md`, `data-model.md`).
+- Mark affected items in `docs/project-status.md`:
+  - **In progress** when you begin
+  - **Done** when complete (with a short note if useful)
+  - **Waiting** if blocked on a decision
+  - **Deferred** if explicitly pushed to a later phase
+
+## After completing work
+
+1. Update `docs/project-status.md` checklist rows and bump **Last updated** date.
+2. Add a row to the **Decision log** in `project-status.md` when a meaningful product or technical decision is made.
+3. Keep docs and code aligned — if behavior changed, the docs must reflect it.
+
+## Doc map
+
+| Topic | File |
+|-------|------|
+| Vision & flows | `docs/overview.md` |
+| System design | `docs/architecture.md` |
+| Tenants | `docs/multi-tenancy.md` |
+| Schema | `docs/data-model.md` |
+| Registration site | `docs/platform-site.md` |
+| Customer storefront | `docs/storefront.md` |
+| Plans (future) | `docs/subscriptions.md` |
+| Dev setup | `docs/development.md` |
+| Checklist | `docs/project-status.md` |
