@@ -122,7 +122,7 @@ See **[implementation-audit.md](./implementation-audit.md)** for the full cross-
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Backend test suite (Vitest + Supertest) | Done | 49 tests |
+| Backend test suite (Vitest + Supertest) | Done | 49 tests under `src/test/` |
 | Backend coverage CI gates | Done | Target 100%; CI mins: lines 99%, branches 88%, funcs 100%, stmts 97% |
 | Frontend tests | Planned | Rule in place; not started |
 | API validation (Zod) | Partial | Auth, stores, products, pages, superadmin |
@@ -149,3 +149,8 @@ See **[implementation-audit.md](./implementation-audit.md)** for the full cross-
 | 2026-06-22 | Stores/memberships model | Align code with docs |
 | 2026-06-22 | Mandatory tests + coverage rule | `.cursor/rules/testing.mdc` |
 | 2026-06-22 | `schema.ts` excluded from coverage | Drizzle declarative DSL |
+| 2026-06-22 | Subscriptions deferred | Plans not finalized |
+| 2026-06-22 | Flexible product `metadata` jsonb | Catalogs vary per business |
+| 2026-06-22 | Path-based storefront routing for dev | Subdomains later |
+| 2026-06-22 | Superadmin as platform_role on users | Separate from store_memberships; cross-tenant via `/api/superadmin` |
+| 2026-06-22 | Superadmin phased after core tenant flows | Auth + stores first; platform ops in phase 6–7 |
