@@ -33,52 +33,26 @@ logs: ## Tail Docker Compose logs
 ps: ## List running services
 	$(COMPOSE) ps
 
-backend-shell: ## Open a shell in the backend container
-	$(COMPOSE) exec backend /bin/sh
+ssh-api: ## SSH into the API container
+	$(COMPOSE) exec backend sh
 
-frontend-shell: ## Open a shell in the frontend container
-	$(COMPOSE) exec frontend /bin/sh
+ssh-fe: ## SSH into the frontend container
+	$(COMPOSE) exec frontend sh
 
-db-shell: ## Open a shell in the Postgres container
-	$(COMPOSE) exec postgres /bin/sh
+ssh-db: ## SSH into the database container
+	$(COMPOSE) exec postgres sh
 
-clean: ## Stop services and remove volumes
-	$(COMPOSE) down -v --remove-orphans
+lint: ## Run linters for both backend and frontend
+	$(COMPOSE) exec backend npm run lint
+	$(COMPOSE) exec frontend npm run lint
 
-backend-install: ## Install backend dependencies
-	cd backend && npm install
+test: ## Run tests for both backend and frontend
+	$(COMPOSE) exec backend npm run test
+	$(COMPOSE) exec frontend npm run test
 
-backend-dev: ## Run backend in dev mode
-	cd backend && npm run dev
+migrate: ## Run database migrations
+	$(COMPOSE) exec backend npm run db:generate	
+	$(COMPOSE) exec backend npm run db:migrate
 
-backend-build: ## Build backend
-	cd backend && npm run build
 
-backend-test: ## Run backend tests
-	cd backend && npm run test
 
-backend-generate: ## Generate database migrations
-	cd backend && npm run db:generate
-
-backend-migrate: ## Run database migrations
-	cd backend && npm run db:migrate
-
-frontend-install: ## Install frontend dependencies
-	cd frontend && npm install
-
-frontend-dev: ## Run frontend in dev mode
-	cd frontend && npm run dev
-
-frontend-build: ## Build frontend
-	cd frontend && npm run build
-
-frontend-lint: ## Lint frontend
-	cd frontend && npm run lint
-
-install: backend-install frontend-install ## Install all dependencies
-
-lint: frontend-lint ## Run all linters
-
-test: backend-test ## Run all tests
-
-build-all: backend-build frontend-build ## Build all apps
