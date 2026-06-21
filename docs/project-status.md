@@ -2,7 +2,7 @@
 
 Living checklist for Store2Web. Update this file whenever work starts, completes, or scope changes.
 
-**Last updated:** 2026-06-22
+**Last updated:** 2026-06-22 (superadmin docs added)
 
 ## Legend
 
@@ -54,6 +54,29 @@ Living checklist for Store2Web. Update this file whenever work starts, completes
 | Tenant scoping middleware/service helper | Planned | Enforce on all store routes |
 | Store creation UI (platform) | Planned | After auth |
 | Owner dashboard (list stores) | Planned | |
+
+---
+
+## Superadmin (platform operator)
+
+| Item | Status | Notes |
+|------|--------|-------|
+| Superadmin documentation | Done | [superadmin.md](./superadmin.md) |
+| `users.platform_role` + `disabled_at` fields | Planned | `user` \| `superadmin` |
+| `admin_audit_logs` table | Planned | All mutating superadmin actions |
+| Superadmin auth middleware | Planned | `/api/superadmin/*` guard |
+| Bootstrap first superadmin (seed/env) | Planned | No public self-promotion |
+| Superadmin stores list + detail API | Planned | Search, filter, paginate |
+| Suspend / unsuspend store | Planned | Hides public storefront |
+| Superadmin users list + detail API | Planned | |
+| Disable user account | Planned | Blocks platform login |
+| Promote/demote superadmin role | Planned | Superadmin-only |
+| Audit log API + UI | Planned | |
+| Superadmin dashboard metrics | Planned | Store/user counts |
+| Superadmin console UI | Planned | Distinct from store admin |
+| Store delete (soft) | Planned | |
+| Impersonation | Deferred | High audit bar |
+| Superadmin 2FA | Deferred | Before production |
 
 ---
 
@@ -133,8 +156,10 @@ Living checklist for Store2Web. Update this file whenever work starts, completes
 3. Products, categories, media upload
 4. Content pages
 5. Public storefront read APIs + UI
-6. Subscriptions (after business decisions)
-7. Cart/checkout (if prioritized)
+6. Superadmin phase 1 (role, middleware, stores list, suspend)
+7. Superadmin phase 2 (users, audit log, dashboard UI)
+8. Subscriptions (after business decisions)
+9. Cart/checkout (if prioritized)
 
 ---
 
@@ -146,3 +171,5 @@ Living checklist for Store2Web. Update this file whenever work starts, completes
 | 2026-06-22 | Subscriptions deferred | Plans not finalized |
 | 2026-06-22 | Flexible product `metadata` jsonb | Catalogs vary per business |
 | 2026-06-22 | Path-based storefront routing for dev | Subdomains later |
+| 2026-06-22 | Superadmin as platform_role on users | Separate from store_memberships; cross-tenant via `/api/superadmin` |
+| 2026-06-22 | Superadmin phased after core tenant flows | Auth + stores first; platform ops in phase 6–7 |

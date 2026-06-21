@@ -35,6 +35,7 @@ alwaysApply: true
 | Tenants | `docs/multi-tenancy.md` |
 | Schema | `docs/data-model.md` |
 | Registration site | `docs/platform-site.md` |
+| Platform superadmin | `docs/superadmin.md` |
 | Customer storefront | `docs/storefront.md` |
 | Plans (future) | `docs/subscriptions.md` |
 | Dev setup | `docs/development.md` |
