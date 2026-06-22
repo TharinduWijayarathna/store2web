@@ -1,0 +1,55 @@
+---
+description: Require tests and 100% coverage for all application code
+alwaysApply: true
+---
+
+# Testing & coverage (mandatory)
+
+## Before marking work complete
+
+1. **Write tests** for every new or changed behavior (backend and frontend).
+2. Run tests with coverage and ensure thresholds pass (target **100%** on all metrics; CI minimums: lines 99%, branches 88%, functions 100%, statements 97% — do not reduce).
+
+## Commands
+
+```bash
+# Backend
+cd backend && npm run test:coverage
+
+# Frontend
+cd frontend && npm run test:coverage
+
+# Both (from repo root)
+npm run test:coverage
+```
+3. Do not merge or finish a task if coverage drops below CI minimums for touched packages.
+4. Work toward **100%** on lines, branches, functions, and statements.
+
+| Layer | Approach |
+|-------|----------|
+| **Utils / services** | Unit tests (pure logic, mocked DB where needed) |
+| **API routes** | Integration tests with Supertest against `app` |
+| **Middleware** | Unit or integration (auth, 401/403/404 paths) |
+| **React pages/components** | Vitest + React Testing Library (render, user flows, errors) |
+| **API client** | Mock `fetch`; test success and error handling |
+
+## Conventions
+
+- Test files live under `backend/src/test/` (mirrors source layout: `utils/`, `middleware/`, `services/`, etc.). Do **not** colocate `*.test.ts` next to source files.
+- Name tests after behavior: `register rejects duplicate email`.
+- Cover **happy path, validation errors, auth failures, and not-found** for each endpoint.
+- Update [project-status.md](../docs/project-status.md) test rows when adding suites.
+- Bug fixes must include a regression test.
+
+## CI
+
+GitHub Actions runs `npm run test:coverage` and **fails if thresholds are below 100%**.
+
+## Exclusions
+
+Only exclude from coverage with an inline comment and doc note when truly untestable:
+
+- `src/db/schema.ts` — Drizzle table/index DSL (declarative; covered indirectly via migrations)
+- `src/types/**` — TypeScript declarations only
+
+Default: no other exclusions.

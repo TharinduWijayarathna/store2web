@@ -1,4 +1,5 @@
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import express from "express";
 import swaggerUi from "swagger-ui-express";
 
@@ -26,6 +27,7 @@ app.use(
     credentials: allowedOrigins !== "*",
   }),
 );
+app.use(cookieParser());
 app.use(express.json());
 app.use(requestLogger);
 

@@ -2,16 +2,18 @@
 
 The public **Store2Web** website is where businesses discover the product, register, log in, and create their first store.
 
-## Pages (planned)
+Auth uses **JWT in an httpOnly cookie** (`s2w_token`). All listed API routes below are implemented unless noted.
 
-| Page | Purpose |
-|------|---------|
-| Home | Value proposition, features, CTA to register |
-| Pricing | Plan comparison (placeholder until subscriptions defined) |
-| Register | Create platform account |
-| Login | Authenticate store owners |
-| Dashboard | List user's stores; create new store |
-| Create store | Name, slug, basic settings |
+## Pages
+
+| Page | Status | Route |
+|------|--------|-------|
+| Home | Done | `/` |
+| Register | Done | `/register` |
+| Login | Done | `/login` |
+| Dashboard | Done | `/dashboard` |
+| Create store | Done | `/stores/new` |
+| Pricing | Planned | Deferred with subscriptions |
 
 ## Registration flow
 
@@ -28,21 +30,19 @@ The public **Store2Web** website is where businesses discover the product, regis
 
 ## UI notes
 
-- Frontend currently uses the default Vite template — replace with Store2Web branding.
+- Store2Web branded landing and auth flows are implemented.
 - Responsive layout for small business owners on mobile.
 - Clear separation from tenant storefront styling (platform vs store brand).
 
-## API endpoints (planned)
+## API endpoints
 
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | `/api/auth/register` | Register user |
-| POST | `/api/auth/login` | Login |
-| POST | `/api/auth/logout` | Logout |
-| GET | `/api/me` | Current user + stores |
-| POST | `/api/stores` | Create store |
-| GET | `/api/stores` | List user's stores |
-| GET | `/api/stores/:id` | Store details (member only) |
-| PATCH | `/api/stores/:id` | Update store settings |
-
-Auth mechanism (session cookie vs JWT) — **TBD** during auth implementation.
+| Method | Path | Status |
+|--------|------|--------|
+| POST | `/api/auth/register` | Done |
+| POST | `/api/auth/login` | Done |
+| POST | `/api/auth/logout` | Done |
+| GET | `/api/me` | Done |
+| POST | `/api/stores` | Done |
+| GET | `/api/stores` | Done |
+| GET | `/api/stores/:id` | Done |
+| PATCH | `/api/stores/:id` | Done |

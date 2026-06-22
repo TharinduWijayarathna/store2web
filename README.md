@@ -41,6 +41,13 @@ npm run db:generate
 npm run db:migrate
 ```
 
+With Docker (recommended if Postgres runs in compose):
+```bash
+docker compose run --rm backend npm run db:migrate
+```
+
+Set `JWT_SECRET`, `CORS_ORIGIN`, and optional `SUPERADMIN_EMAIL` in `backend/.env` — see `backend/.env.example`.
+
 ## Frontend (Vite + React)
 ```bash
 cd frontend
