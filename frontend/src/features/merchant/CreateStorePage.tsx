@@ -1,24 +1,16 @@
 import { type FormEvent, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { ArrowLeft, Globe, Storefront } from "@phosphor-icons/react";
+import { ArrowLeft } from "@phosphor-icons/react";
 
-import { AppShell } from "@/components/AppShell";
-import { PageHeader } from "@/components/PageHeader";
+import { MerchantLayout } from "@/components/merchant/MerchantLayout";
 import { createStore } from "@/api";
+import { useAuth } from "@/context/AuthContext";
+import { slugify } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useAuth } from "@/context/AuthContext";
-
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
 
 function CreateStorePage() {
   const { user, refresh } = useAuth();
@@ -29,14 +21,12 @@ function CreateStorePage() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
+  if (!user) return <Navigate to="/login" replace />;
 
   const previewSlug = slug || slugify(name) || "your-store";
 
-  const onSubmit = async (event: FormEvent) => {
-    event.preventDefault();
+  const onSubmit = async (e: FormEvent) => {
+    e.preventDefault();
     setSubmitting(true);
     setError(null);
     try {
@@ -55,28 +45,31 @@ function CreateStorePage() {
   };
 
   return (
-    <AppShell mainClassName="py-10">
+    <MerchantLayout>
       <Button variant="ghost" size="sm" className="mb-6 -ml-2" asChild>
         <Link to="/dashboard">
           <ArrowLeft />
-          Back to dashboard
+          Back
         </Link>
       </Button>
 
-      <PageHeader
-        title="Create a new store"
-        description="Set up your shop details. You can add products and publish your storefront next."
-      />
+      <div className="mx-auto max-w-2xl">
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+          Create a new store
+        </h1>
+        <p className="mt-2 text-muted-foreground">
+          Set up your ecommerce storefront. You can add products and publish right
+          after.
+        </p>
 
-      <div className="mt-10 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-        <Card>
+        <Card className="mt-8">
           <CardContent className="pt-2">
             <form onSubmit={onSubmit} className="space-y-5">
               <div className="space-y-2">
                 <Label htmlFor="name">Store name</Label>
                 <Input
                   id="name"
-                  placeholder="Sunrise Bakery"
+                  placeholder="Bloom & Co."
                   value={name}
                   onChange={(e) => {
                     setName(e.target.value);
@@ -87,71 +80,43 @@ function CreateStorePage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="slug">Store URL</Label>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center rounded-lg border border-input bg-muted/30 px-3 focus-within:ring-2 focus-within:ring-ring/30">
                   <span className="shrink-0 text-sm text-muted-foreground">
-                    /s/
+                    store2web.com/s/
                   </span>
                   <Input
                     id="slug"
+                    className="border-0 bg-transparent shadow-none focus-visible:ring-0"
                     value={slug}
                     onChange={(e) => setSlug(slugify(e.target.value))}
-                    placeholder="sunrise-bakery"
+                    placeholder={previewSlug}
                     required
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="description">Store description</Label>
                 <Textarea
                   id="description"
-                  placeholder="Tell customers what makes your store special."
+                  placeholder="Tell customers what you sell and what makes your brand special."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
+                  rows={4}
                 />
               </div>
               {error ? (
-                <div className="rounded-lg border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+                <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">
                   {error}
-                </div>
+                </p>
               ) : null}
-              <Button type="submit" disabled={submitting} size="lg">
-                {submitting ? "Creating store..." : "Create store"}
+              <Button type="submit" size="lg" disabled={submitting}>
+                {submitting ? "Creating..." : "Create store"}
               </Button>
             </form>
           </CardContent>
         </Card>
-
-        <div className="space-y-4">
-          <Card className="overflow-hidden">
-            <div className="border-b border-border/60 bg-muted/30 px-5 py-4">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Globe className="size-4" />
-                Storefront preview
-              </div>
-            </div>
-            <CardContent className="space-y-4 pt-2">
-              <div className="flex items-center gap-3">
-                <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <Storefront className="size-6" weight="duotone" />
-                </div>
-                <div>
-                  <p className="font-heading text-lg font-semibold">
-                    {name || "Your store name"}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    /s/{previewSlug}
-                  </p>
-                </div>
-              </div>
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                {description ||
-                  "Your store description will appear here on the public storefront."}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
       </div>
-    </AppShell>
+    </MerchantLayout>
   );
 }
 
